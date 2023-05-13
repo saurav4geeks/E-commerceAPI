@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.js";
+import authRoutes from "./routes/auth.js";
 //Configs
 dotenv.config();
 const app = express();
@@ -24,3 +25,4 @@ app.get("/api/test", (req, res) => {
   res.send("Hello World");
 });
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
