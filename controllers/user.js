@@ -24,3 +24,26 @@ export const updateUser = async (req, res) => {
   }
   return res.status(403).json({ error: "You can update only your account!" });
 };
+
+//delete user
+export const deleteUser = async (req, res) => {
+  if (req.user.id === req.params.id || req.user.isAdmin) {
+    try {
+      await User.findByIdAndDelete(req.params.id);
+      res.status(200).json({ message: "User has been deleted..." });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+  return res.status(403).json({ error: "You can delete only your account!" });
+};
+//get a user
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const { password, updatedAt, ...other } = user._doc;
+    res.status(200).json(other);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
