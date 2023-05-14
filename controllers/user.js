@@ -47,3 +47,40 @@ export const getUser = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+//get all users
+export const getAllUsers = async (req, res) => {
+  const query = req.query.new;
+  try {
+    console.log("API Hit");
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+//get user stats
+export const getUserStats = async (req, res) => {
+  const today = new Date();
+  const lastYear = new Date(today.getFullYear() - 1, 11, 31);
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
