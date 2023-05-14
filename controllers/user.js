@@ -1,7 +1,6 @@
 import User from "../models/user.js";
 //functions to update user
 export const updateUser = async (req, res) => {
-  console.log("API Hit");
   if (req.user.id === req.params.id || req.user.isAdmin) {
     if (req.body.password) {
       try {
@@ -51,7 +50,6 @@ export const getUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   const query = req.query.new;
   try {
-    console.log("API Hit");
     const users = query
       ? await User.find().sort({ _id: -1 }).limit(5)
       : await User.find();
